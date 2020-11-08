@@ -1,22 +1,14 @@
 package chessapi
 
-import chessapi.model.Move.{March, Promotion}
-import chessapi.model.{ChessBoardState, Move, Piece}
+import chessapi.model.{ChessBoardState, Move, Side}
 
 /**
  * @param state: list of moves to define a chessBoard state
  * */
 class ChessBoard(state: ChessBoardState) {
-  def move(move: Move): ChessBoard  = move match {
-    case March(startPos, targetPos) => {
-      new ChessBoard(state)
-    }
-    case Promotion(startRow, pieceType) => {
-      throw new Exception(s"Not supported yet")
-    }
-  }
-
+  def move(move: Move): ChessBoard = new ChessBoard(state.update(move))
   def getState: String = state.asString
+  def getTurn: Side = state.turn
 }
 
 object ChessBoard {

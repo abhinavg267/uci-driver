@@ -1,8 +1,14 @@
 package chessapi.model
 
+import chessapi.model.Side.{Black, White}
 import chessapi.model.util.{StringCompanion, WithAsString}
 
-sealed trait Side extends WithAsString
+sealed trait Side extends WithAsString {
+  def next: Side = this match {
+    case Side.White => Black
+    case Side.Black => White
+  }
+}
 object Side extends StringCompanion[Side] {
   case object White extends Side {
     override def asString: String = "w"
@@ -52,17 +58,15 @@ case class Piece(side: Side, pieceType: PieceType) {
 }
 
 object Piece {
-  def fromStringOpt(rawStr: String): Option[Piece] = {
-    val str = rawStr.trim
-
+  def fromStringOpt(str: String): Option[Piece] = {
     str.length match {
       case 1 if str == "_" => None
       case 2 =>
         val sideStr: String = str.substring(0, 1)
         val pieceTypeStr = str.substring(1, 2)
 
-        val side: Side = Side.fromString(sideStr)
-        val pieceType: PieceType = PieceType.fromString(pieceTypeStr)
+        val side: Side = Side.fromString(sideStr, "Side")
+        val pieceType: PieceType = PieceType.fromString(pieceTypeStr, "Piece")
 
         Some(Piece(side, pieceType))
       case _ => throw new Exception(s"Cannot parse string: $str to ${classOf[Piece]}")

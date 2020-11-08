@@ -1,11 +1,14 @@
 package chessapi.app
 
 import chessapi.ChessBoard
-import chessapi.model.Move.March
-import chessapi.model.{Column, Position, Row}
+import chessapi.model.Move
 
 object ChessBoardApp extends App {
-  val chessBoard = ChessBoard(List.empty)
-  println(chessBoard.move(March(startPos = Position(row = Row.Two, column = Column.B),
-    targetPos = Position(row = Row.Four, column = Column.B))).getState)
+  var chessBoard = ChessBoard(List.empty)
+  while (true) {
+    println(chessBoard.getState)
+    println(s"Enter next move for ${chessBoard.getTurn}:  ")
+    val moveStr = scala.io.StdIn.readLine()
+    chessBoard = chessBoard.move(Move.fromString(moveStr))
+  }
 }

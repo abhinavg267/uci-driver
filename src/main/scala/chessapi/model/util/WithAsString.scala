@@ -10,6 +10,6 @@ trait StringCompanion[T <: WithAsString] {
     case ele if ele.asString == str => ele
   }
 
-  def fromString(str: String): T = fromStringOpt(str).getOrElse(
-    throw new Exception(s"String $str is not a defined type of T"))
+  def fromString(str: String, className: String): T = fromStringOpt(str).getOrElse(
+    throw new Exception(s"String $str is not a defined type of $className"))
 }

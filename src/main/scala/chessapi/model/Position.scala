@@ -1,11 +1,13 @@
 package chessapi.model
 
-sealed trait Axis {
+import chessapi.model.util.{StringCompanion, WithAsString}
+
+sealed trait Axis extends WithAsString {
   def asString: String
 }
 
 sealed trait Row extends Axis
-object Row {
+object Row extends StringCompanion[Row] {
   case object One extends Row {
     override def asString: String = "1"
   }
@@ -37,10 +39,12 @@ object Row {
   case object Eight extends Row {
     override def asString: String = "8"
   }
+
+  override def all: Set[Row] = Set(One, Two, Three, Four, Five, Six, Seven, Eight)
 }
 
 sealed trait Column extends Axis
-object Column {
+object Column extends StringCompanion[Column] {
   case object A extends Column {
     override def asString: String = "a"
   }
@@ -72,8 +76,45 @@ object Column {
   case object H extends Column {
     override def asString: String = "h"
   }
+
+  override def all: Set[Column] = Set(A, B, C, D, E, F, G, H)
 }
 
 case class Position(row: Row, column: Column) {
   def asString: String = s"${row.asString}${column.asString}"
+
+  def x: Int = row match {
+    case Row.One => 7
+    case Row.Two => 6
+    case Row.Three => 5
+    case Row.Four => 4
+    case Row.Five => 3
+    case Row.Six => 2
+    case Row.Seven => 1
+    case Row.Eight => 0
+  }
+
+  def y: Int = column match {
+    case Column.A => 0
+    case Column.B => 1
+    case Column.C => 2
+    case Column.D => 3
+    case Column.E => 4
+    case Column.F => 5
+    case Column.G => 6
+    case Column.H => 7
+  }
+}
+
+object Position {
+  def fromString(positionStr: String): Position = {
+    positionStr.length match {
+      case 2 =>
+        val colStr = positionStr.substring(0, 1)
+        val rowStr = positionStr.substring(1, 2)
+
+        Position(Row.fromString(rowStr, "Row"), Column.fromString(colStr, "Col"))
+      case _ => throw new Exception(s"Cannot parse string $positionStr to ${classOf[Position]}")
+    }
+  }
 }
