@@ -1,4 +1,4 @@
-package uci.driver.util
+package chessapi.uci.driver.util
 
 /** Logs to console
  * */

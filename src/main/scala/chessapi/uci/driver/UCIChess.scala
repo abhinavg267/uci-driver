@@ -1,24 +1,32 @@
-package uci.driver
+package chessapi.uci.driver
 
 import java.io.{BufferedReader, InputStreamReader, OutputStream}
 
-import uci.driver.util.{Logger, SafeProcessInteraction}
+import chessapi.uci.driver.util.{Logger, SafeProcessInteraction}
 
 class UCIChess(engine: Process, responseReader: BufferedReader, commandStream: OutputStream) {
+
+  def sendUCICommand(uciCommand: UCICommand): String = {
+    uciCommand match {
+      case UCICommand.SwitchToUCI =>
+        sendUCICommand(uciCommand.cmd)
+        readResponse(uciCommand.stopAt)
+    }
+  }
 
   def sendUCICommand(cmd: String): Unit = SafeProcessInteraction {
     commandStream.write(s"$cmd\n".getBytes())
     commandStream.flush()
   }(identity)
 
-  def readResponse(stopAt: String): String = {
+  def readResponse(stopAt: String, trace: Boolean = false): String = SafeProcessInteraction {
     val line =  responseReader.readLine()
-    println(line)
+    if(trace) println(line)
     if(line != null) {
       if(line.startsWith(stopAt)) line
       else readResponse(stopAt)
     } else throw new Exception(s"Illegal response!")
-  }
+  }(identity)
 
   def destroy(): Unit = SafeProcessInteraction {
     engine.destroy()
