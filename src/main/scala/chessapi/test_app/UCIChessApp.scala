@@ -1,4 +1,4 @@
-package chessapi.uci.driver.app
+package chessapi.test_app
 
 import chessapi.uci.driver.UCIChess
 

@@ -65,8 +65,8 @@ object Piece {
         val sideStr: String = str.substring(0, 1)
         val pieceTypeStr = str.substring(1, 2)
 
-        val side: Side = Side.fromString(sideStr, "Side")
-        val pieceType: PieceType = PieceType.fromString(pieceTypeStr, "Piece")
+        val side: Side = Side.fromString(sideStr)
+        val pieceType: PieceType = PieceType.fromString(pieceTypeStr)
 
         Some(Piece(side, pieceType))
       case _ => throw new Exception(s"Cannot parse string: $str to ${classOf[Piece]}")

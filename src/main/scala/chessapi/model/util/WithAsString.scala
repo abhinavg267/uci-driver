@@ -1,5 +1,7 @@
 package chessapi.model.util
 
+import scala.reflect.ClassTag
+
 trait WithAsString {
   def asString: String
 }
@@ -10,6 +12,6 @@ trait StringCompanion[T <: WithAsString] {
     case ele if ele.asString == str => ele
   }
 
-  def fromString(str: String, className: String): T = fromStringOpt(str).getOrElse(
-    throw new Exception(s"String $str is not a defined type of $className"))
+  def fromString(str: String)(implicit classTag: ClassTag[T]): T = fromStringOpt(str).getOrElse(
+    throw new Exception(s"String $str is not a defined type of ${classTag.runtimeClass.getName}"))
 }
