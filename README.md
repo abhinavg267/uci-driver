@@ -17,6 +17,6 @@ to play against a computer. The example code provided herewith uses Stockfish en
 
 ### Resources
 - [FIDE: Laws of Chess](https://www.fide.com/FIDE/handbook/LawsOfChess.pdf)
-- [Description of the universal chess interface (UCI)](http://download.shredderchess.com/div/uci.zip)
+- [Description of the universal chess interface (UCI)](http://wbec-ridderkerk.nl/html/UCIProtocol.html)
 - [Stockfish: A UCI Compatible chess engine](https://stockfishchess.org)
 - [Forsyth–Edwards Notation (FEN)](https://en.wikipedia.org/wiki/Forsyth–Edwards_Notation)
