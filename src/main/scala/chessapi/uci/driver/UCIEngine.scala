@@ -4,23 +4,16 @@ import java.io.{BufferedReader, InputStreamReader, OutputStream}
 
 import chessapi.uci.driver.util.{Logger, SafeProcessInteraction}
 
-class UCIChess(engine: Process, responseReader: BufferedReader, commandStream: OutputStream) {
-
-  def sendUCICommand(uciCommand: UCICommand): String = {
-    uciCommand match {
-      case UCICommand.SwitchToUCI =>
-        sendUCICommand(uciCommand.cmd)
-        readResponse(uciCommand.stopAt)
-    }
-  }
+class UCIEngine(engine: Process, responseReader: BufferedReader, commandStream: OutputStream) {
 
   def sendUCICommand(cmd: String): Unit = SafeProcessInteraction {
+    Logger.info(s"Sending UCI command: $cmd")
     commandStream.write(s"$cmd\n".getBytes())
     commandStream.flush()
   }(identity)
 
   def readResponse(stopAt: String, trace: Boolean = false): String = SafeProcessInteraction {
-    val line =  responseReader.readLine()
+    val line = responseReader.readLine()
     if(trace) println(line)
     if(line != null) {
       if(line.startsWith(stopAt)) line
@@ -36,8 +29,8 @@ class UCIChess(engine: Process, responseReader: BufferedReader, commandStream: O
   }(identity)
 }
 
-object UCIChess {
-  def apply(engine: String): UCIChess = SafeProcessInteraction {
+object UCIEngine {
+  def apply(engine: String): UCIEngine = SafeProcessInteraction {
     val chessEngine = new ProcessBuilder(engine).start()
     val out = chessEngine.getOutputStream
     val in = new BufferedReader(new InputStreamReader(chessEngine.getInputStream))
@@ -45,6 +38,6 @@ object UCIChess {
   } {
     case (chessEngine, in, out) =>
       Logger.info("Engine Started successfully!")
-      new UCIChess(chessEngine, in, out)
+      new UCIEngine(chessEngine, in, out)
   }
 }

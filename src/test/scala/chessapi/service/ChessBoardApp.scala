@@ -1,7 +1,6 @@
-package chessapi.test_app
+package chessapi.service
 
 import chessapi.model.Move
-import chessapi.service.ChessAPIServiceImpl
 
 object ChessBoardApp extends App {
   val chessAPIService = new ChessAPIServiceImpl
