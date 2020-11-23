@@ -2,10 +2,12 @@ package chessapi.uci.driver
 
 object UCIChessApp extends App {
   val engine = UCIEngine(s"/usr/local/bin/stockfish")
-  // UCIProcedure.switchToUCI.execute(engine)
+  (UCIProcedure.switchToUCI ->
+    UCIProcedure.isReady ->
+    UCIProcedure.startANewGame).execute(engine)
 
-  engine.sendUCICommand("uci")
-  engine.readResponse("uciok", trace = true)
+//  engine.sendUCICommand("uci")
+//  engine.readResponse("uciok", trace = true)
 //  engine.sendUCICommand("isready")
 //  println(engine.readResponse("readyok"))
 //  engine.sendUCICommand("position startpos moves e2e4")

@@ -8,16 +8,16 @@ class UCIEngine(engine: Process, responseReader: BufferedReader, commandStream: 
 
   def sendUCICommand(cmd: String): Unit = SafeProcessInteraction {
     Logger.info(s"Sending UCI command: $cmd")
-    commandStream.write(s"$cmd\n".getBytes())
+    commandStream.write(s"$cmd".getBytes())
     commandStream.flush()
   }(identity)
 
-  def readResponse(stopAt: String, trace: Boolean = false): String = SafeProcessInteraction {
+  def readResponse(stopAt: String, trace: Boolean): String = SafeProcessInteraction {
     val line = responseReader.readLine()
     if(trace) println(line)
     if(line != null) {
       if(line.startsWith(stopAt)) line
-      else readResponse(stopAt)
+      else readResponse(stopAt, trace)
     } else throw new Exception(s"Illegal response!")
   }(identity)
 
