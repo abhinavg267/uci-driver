@@ -1,4 +1,4 @@
-package chessapi.model.util
+package chessapi.util
 
 object CustomExceptions {
   case class StringParsingError(string: String, className: String) extends Exception(

@@ -2,18 +2,27 @@
 
 ## Components
 - UCIEngine
-    - start
-        - start the process
-        - SwitchToUCI -> IsReady -> StartANewGame
-    - evaluate
-        - GetBestMove
+    - create
+    - sendCommand
+        - returns Unit
+    - readResponse 
+        - return UCIResponse
+    - destroy
+       
 - UCICommand
     - Simple Commands
     - Commands with predefined parameters
+    
 - UCIResponse
+    - ResponseType
+    - Response
+        - readResponse method in Engine will return this
+
 - UCIProcedure
-    - A procedure will have an `execute` method, with return type `T`
-    - New Procedures can be created with Procedures
+    - A procedure will have an `execute` method, with a generic return type `T`
+    - Procedures can be clubbed together with `->` to create new Procedure, the return type of the new Procedure will 
+        be the same as the return type of Procedure in RHS (Right-Hand-Side)
+    - ReturnType of `ReadResponse` Procedure should be a specific Implementation of `UCIResponse` instead of generic `UCIResponse` #TODO
 
 ### UCIProcedures
 1. SendCommand: Send a command

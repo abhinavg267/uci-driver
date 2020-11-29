@@ -1,7 +1,7 @@
 package chessapi.model
 
 import chessapi.model.Side.{Black, White}
-import chessapi.model.util.{StringCompanion, WithAsString}
+import chessapi.util.{StringCompanion, WithAsString}
 
 sealed trait Side extends WithAsString {
   def next: Side = this match {

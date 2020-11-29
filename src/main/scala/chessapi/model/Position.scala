@@ -1,6 +1,6 @@
 package chessapi.model
 
-import chessapi.model.util.{StringCompanion, WithAsString}
+import chessapi.util.{StringCompanion, WithAsString}
 
 sealed trait Axis extends WithAsString {
   def asString: String
@@ -98,7 +98,8 @@ object Column extends StringCompanion[Column] {
 }
 
 case class Position(row: Row, column: Column) {
-  def asString: String = s"${row.asString}${column.asString}"
+  override def toString: String = asString
+  def asString: String = s"${column.asString}${row.asString}"
   def getUpdatedPosition(dr: Int, dc: Int): Option[Position] =
     Position.fromIndexOpt(row.index + dr, column.index + dc)
 }

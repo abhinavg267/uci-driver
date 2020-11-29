@@ -1,5 +1,6 @@
 package chessapi.uci.driver
 
+import chessapi.model.Move
 import chessapi.uci.driver.UCIProcedure.UCIProcedureImpl
 
 sealed trait UCIProcedure[LHT] {
@@ -21,17 +22,16 @@ object UCIProcedure {
   }
 
   case class SendUCICommand(command: UCICommand) extends UCIProcedure[Unit] {
-    override def execute(uciEngine: UCIEngine): Unit = uciEngine.sendUCICommand(command.cmd)
+    override def execute(uciEngine: UCIEngine): Unit = uciEngine.sendCommand(command.cmd)
   }
 
-  case class ReadUCIResponse(response: UCIResponse) extends UCIProcedure[String] {
-    override def execute(uciEngine: UCIEngine): String = uciEngine.readResponse(response.asString, trace = true)
+  case class ReadUCIResponse(responseType: UCIResponseType) extends UCIProcedure[UCIResponse] {
+    override def execute(uciEngine: UCIEngine): UCIResponse = uciEngine.readResponse(responseType, trace = true)
   }
 
-  def switchToUCI(uciEngine: UCIEngine) = {
-    (SendUCICommand(UCICommand.UCI) -> ReadUCIResponse(UCIResponse.UCIOk)).execute(uciEngine)
-
-  }
-  val isReady: UCIProcedure[String] = SendUCICommand(UCICommand.IsReady) -> ReadUCIResponse(UCIResponse.ReadyOk)
-  val startANewGame: UCIProcedure[String] = SendUCICommand(UCICommand.NewGame) -> isReady
+  val switchToUCI: UCIProcedure[UCIResponse] = SendUCICommand(UCICommand.UCI) -> ReadUCIResponse(UCIResponseType.UCIOk)
+  val isReady: UCIProcedure[UCIResponse] = SendUCICommand(UCICommand.IsReady) -> ReadUCIResponse(UCIResponseType.ReadyOk)
+  val startANewGame: UCIProcedure[UCIResponse] = SendUCICommand(UCICommand.NewGame) -> isReady
+  def setPosition(initialPosition: Option[String], moves: List[Move]): UCIProcedure[Unit] = SendUCICommand(UCICommand.Position(initialPosition, moves))
+  def getBestMove(depth: Int): UCIProcedure[UCIResponse] = SendUCICommand(UCICommand.Calculate(depth)) -> ReadUCIResponse(UCIResponseType.BestMove)
 }
