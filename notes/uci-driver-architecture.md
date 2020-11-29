@@ -22,6 +22,7 @@
     - A procedure will have an `execute` method, with a generic return type `T`
     - Procedures can be clubbed together with `->` to create new Procedure, the return type of the new Procedure will 
         be the same as the return type of Procedure in RHS (Right-Hand-Side)
+    - ReturnType of `ReadResponse` Procedure should be a specific Implementation of `UCIResponse` instead of generic `UCIResponse` #TODO
 
 ### UCIProcedures
 1. SendCommand: Send a command
