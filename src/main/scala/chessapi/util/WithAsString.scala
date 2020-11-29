@@ -1,4 +1,4 @@
-package chessapi.model.util
+package chessapi.util
 
 import scala.reflect.ClassTag
 

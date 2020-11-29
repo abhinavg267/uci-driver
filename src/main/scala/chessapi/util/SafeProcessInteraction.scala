@@ -1,4 +1,4 @@
-package chessapi.uci.driver.util
+package chessapi.util
 
 import scala.util.{Failure, Success, Try}
 

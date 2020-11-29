@@ -25,7 +25,7 @@ object UCICommand {
    * */
   case class Position(initialPosition: Option[String], moves: List[Move]) extends UCICommand {
     override def asString: String =
-      s"position ${initialPosition.getOrElse("startpos")} moves ${moves.mkString(" ")}"
+      s"position ${initialPosition.getOrElse("startpos")} moves ${moves.map(convertMoveToEngineReadableString).mkString(" ")}"
   }
 
   case class Calculate(depth: Int) extends UCICommand {
@@ -34,5 +34,13 @@ object UCICommand {
 
   case object Stop extends UCICommand {
     override def asString: String = "stop"
+  }
+
+  /** Private Methods */
+  def convertMoveToEngineReadableString(move: Move): String = {
+    move match {
+      case Move.Advance(startPos, targetPos) => s"$startPos$targetPos"
+      case Move.Promotion(startPos, targetPos, pieceType) => s"$startPos$targetPos${pieceType.asString.toLowerCase}"
+    }
   }
 }
