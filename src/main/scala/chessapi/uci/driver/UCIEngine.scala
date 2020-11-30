@@ -18,6 +18,7 @@ class UCIEngine(engine: Process, responseReader: BufferedReader, commandStream: 
     if(line != null) {
       UCIResponse.UCIOkResponse(true)
       if(line.startsWith(responseType.startsWith)) {
+        Logger.info(s"Parsing $responseType response: $line")
         UCIResponse.fromString(responseType, line)
       }
       else readResponse(responseType, trace)

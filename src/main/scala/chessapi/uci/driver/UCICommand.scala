@@ -23,7 +23,7 @@ object UCICommand {
   /**
    * @param initialPosition: FEN string for initial position
    * */
-  case class Position(initialPosition: Option[String], moves: List[Move]) extends UCICommand {
+  case class SetPosition(initialPosition: Option[String], moves: List[Move]) extends UCICommand {
     override def asString: String =
       s"position ${initialPosition.getOrElse("startpos")} moves ${moves.map(convertMoveToEngineReadableString).mkString(" ")}"
   }

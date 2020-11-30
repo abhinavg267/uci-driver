@@ -1,5 +1,6 @@
 package chessapi.model
 
+import chessapi.util.ShiftingMath.Shift
 import chessapi.util.{StringCompanion, WithAsString}
 
 sealed trait Axis extends WithAsString {
@@ -100,8 +101,9 @@ object Column extends StringCompanion[Column] {
 case class Position(row: Row, column: Column) {
   override def toString: String = asString
   def asString: String = s"${column.asString}${row.asString}"
-  def getUpdatedPosition(dr: Int, dc: Int): Option[Position] =
-    Position.fromIndexOpt(row.index + dr, column.index + dc)
+  def update(shift: Shift): Option[Position] = {
+    Position.fromIndexOpt(row.index + shift.dr, column.index + shift.dc)
+  }
 }
 
 object Position {

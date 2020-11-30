@@ -2,7 +2,7 @@ package chessapi.uci.driver
 
 import chessapi.model.Move
 import chessapi.uci.driver.UCIResponseType.{BestMove, ReadyOk, UCIOk}
-import chessapi.util.ImplicitExtensions._
+import chessapi.util.CommonImplicitExtensions._
 
 sealed trait UCIResponseType {
   def startsWith: String

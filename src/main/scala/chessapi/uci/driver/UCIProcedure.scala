@@ -26,12 +26,12 @@ object UCIProcedure {
   }
 
   case class ReadUCIResponse(responseType: UCIResponseType) extends UCIProcedure[UCIResponse] {
-    override def execute(uciEngine: UCIEngine): UCIResponse = uciEngine.readResponse(responseType, trace = true)
+    override def execute(uciEngine: UCIEngine): UCIResponse = uciEngine.readResponse(responseType, trace = false)
   }
 
   val switchToUCI: UCIProcedure[UCIResponse] = SendUCICommand(UCICommand.UCI) -> ReadUCIResponse(UCIResponseType.UCIOk)
   val isReady: UCIProcedure[UCIResponse] = SendUCICommand(UCICommand.IsReady) -> ReadUCIResponse(UCIResponseType.ReadyOk)
   val startANewGame: UCIProcedure[UCIResponse] = SendUCICommand(UCICommand.NewGame) -> isReady
-  def setPosition(initialPosition: Option[String], moves: List[Move]): UCIProcedure[Unit] = SendUCICommand(UCICommand.Position(initialPosition, moves))
+  def setPosition(initialPosition: Option[String], moves: List[Move]): UCIProcedure[Unit] = SendUCICommand(UCICommand.SetPosition(initialPosition, moves))
   def getBestMove(depth: Int): UCIProcedure[UCIResponse] = SendUCICommand(UCICommand.Calculate(depth)) -> ReadUCIResponse(UCIResponseType.BestMove)
 }
