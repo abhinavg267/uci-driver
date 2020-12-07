@@ -1,6 +1,8 @@
 package chessapi.uci.driver
 
 import chessapi.model.Move
+import chessapi.model.Move.Castle
+import chessapi.model.Move.Castle.LongCastle
 
 sealed trait UCICommand {
   def cmd = s"$asString\n"
@@ -23,7 +25,7 @@ object UCICommand {
   /**
    * @param initialPosition: FEN string for initial position
    * */
-  case class Position(initialPosition: Option[String], moves: List[Move]) extends UCICommand {
+  case class SetPosition(initialPosition: Option[String], moves: List[Move]) extends UCICommand {
     override def asString: String =
       s"position ${initialPosition.getOrElse("startpos")} moves ${moves.map(convertMoveToEngineReadableString).mkString(" ")}"
   }
@@ -41,6 +43,7 @@ object UCICommand {
     move match {
       case Move.Advance(startPos, targetPos) => s"$startPos$targetPos"
       case Move.Promotion(startPos, targetPos, pieceType) => s"$startPos$targetPos${pieceType.asString.toLowerCase}"
+      case _: Castle => throw new Exception(s"")
     }
   }
 }

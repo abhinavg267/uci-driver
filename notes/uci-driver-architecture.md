@@ -1,6 +1,6 @@
 # UCI Driver Architecture
 
-## Components
+## Models
 - UCIEngine
     - create
     - sendCommand

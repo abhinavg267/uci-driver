@@ -2,7 +2,7 @@ package chessapi.uci.driver
 
 import chessapi.model.Move
 import chessapi.uci.driver.UCIResponseType.{BestMove, ReadyOk, UCIOk}
-import chessapi.util.ImplicitExtensions._
+import chessapi.util.CommonImplicitExtensions._
 
 sealed trait UCIResponseType {
   def startsWith: String
@@ -43,6 +43,7 @@ object UCIResponse {
       case UCIOk => UCIOkResponse(str == responseType.startsWith)
       case ReadyOk => ReadyOkResponse(str == responseType.startsWith)
       case BestMove =>
+        // TODO: Here you should first map moveStr from uci move standards to the standard we follow here
         val res = str.split(" ")
         val bestMove = res.get(1) match {
           case Some(moveStr) => Move.fromString(moveStr)

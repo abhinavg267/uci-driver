@@ -1,4 +1,4 @@
-# [Work In Progress] scala-chess-interface 
+# scala-chess-interface 
 An interface to play a game of chess, validate moves as per rules and interact with any uci compatible chess engines 
 to play against a computer. The example code provided herewith uses Stockfish engine.
 
