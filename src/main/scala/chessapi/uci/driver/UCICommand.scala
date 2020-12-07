@@ -1,6 +1,8 @@
 package chessapi.uci.driver
 
 import chessapi.model.Move
+import chessapi.model.Move.Castle
+import chessapi.model.Move.Castle.LongCastle
 
 sealed trait UCICommand {
   def cmd = s"$asString\n"
@@ -41,6 +43,7 @@ object UCICommand {
     move match {
       case Move.Advance(startPos, targetPos) => s"$startPos$targetPos"
       case Move.Promotion(startPos, targetPos, pieceType) => s"$startPos$targetPos${pieceType.asString.toLowerCase}"
+      case _: Castle => throw new Exception(s"")
     }
   }
 }

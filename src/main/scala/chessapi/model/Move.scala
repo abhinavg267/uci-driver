@@ -1,36 +1,65 @@
 package chessapi.model
 
+import chessapi.model.Move.Castle.{LongCastle, ShortCastle}
+
 sealed trait Move
 
 object Move {
-  // TODO: moveStr from pgn notation, currently we have defined custom notation,
-  //  ie 1. e2e4 => first 2 char represents startPos, last 2 char represent endPost
-  //     2. e7e8Q => promoting pawn in e7 to Queen in e8
+  private val shortCastleMoves = "O-O"
+  private val longCastleMoves = "O-O-O"
+
   def fromString(moveStr: String): Move = {
-    moveStr.length match {
-      case 4 =>
-        val startPosStr = moveStr.substring(0, 2)
-        val targetPosStr = moveStr.substring(2, 4)
-        Advance(startPos = Position.fromString(startPosStr), targetPos = Position.fromString(targetPosStr))
-      case 5 =>
-        val startPosStr = moveStr.substring(0, 2)
-        val targetPosStr = moveStr.substring(2, 4)
-        val pieceTypeStr = moveStr.substring(4, 5)
-        Promotion(startPos = Position.fromString(startPosStr), targetPos = Position.fromString(targetPosStr),
-          pieceType = PieceType.fromString(pieceTypeStr))
-      case _ => throw MoveParsingError(moveStr)
+    if(moveStr == shortCastleMoves) {
+      ShortCastle
+    } else if (moveStr == longCastleMoves) {
+      LongCastle
+    } else {
+      moveStr.length match {
+        case 4 =>
+          val startPosStr = moveStr.substring(0, 2)
+          val targetPosStr = moveStr.substring(2, 4)
+          Advance(startPos = Position(startPosStr), targetPos = Position(targetPosStr))
+        case 5 =>
+          val startPosStr = moveStr.substring(0, 2)
+          val targetPosStr = moveStr.substring(2, 4)
+          val pieceTypeStr = moveStr.substring(4, 5)
+          Promotion(startPos = Position(startPosStr), targetPos = Position(targetPosStr),
+            pieceType = PieceType.fromString(pieceTypeStr))
+        case _ => throw MoveParsingError(moveStr)
+      }
     }
   }
 
-  // Advance, En passant,
+  // Advance, En passant
   case class Advance(startPos: Position, targetPos: Position) extends Move
   // Promotion
   case class Promotion(startPos: Position, targetPos: Position, pieceType: PieceType) extends Move
+  // Castle
+  sealed trait Castle extends Move {
+    def kingsMove(side: Side): Move
+  }
 
-  // TODO: Castling, we don't allow castling now
-//  sealed trait Castle extends Move
-//  case object ShortCastle extends Castle
-//  case object LongCastle extends Castle
+  object Castle {
+    case object ShortCastle extends Castle {
+      def kingsMove(side: Side): Move = {
+        side match {
+          case Side.White => Move.fromString(s"e1g1")
+          case Side.Black => Move.fromString("e8g8")
+        }
+      }
+    }
+
+    case object LongCastle extends Castle {
+      def kingsMove(side: Side): Move = {
+        side match {
+          case Side.White => Move.fromString(s"e1c1")
+          case Side.Black => Move.fromString("a8d8")
+        }
+      }
+    }
+
+    val all: Set[Castle] = Set(ShortCastle, LongCastle)
+  }
 
   /** Exceptions */
   case class MoveParsingError(move: String) extends Exception(s"Cannot parse move: $move to ${classOf[Move]}")

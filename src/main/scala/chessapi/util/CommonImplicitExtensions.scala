@@ -13,5 +13,17 @@ object CommonImplicitExtensions {
       x <- underlying
       y <- that
     } yield (x, y)
+
+    def takeUntil(predicate: T => Boolean):List[T] = {
+      underlying.span(predicate) match {
+        case (head, tail) => head ::: tail.take(1)
+      }
+    }
+  }
+
+  implicit class StringUtils(underlying: String) {
+    def replaceCharAt(i: Int, c: Char): String = {
+      s"${underlying.substring(0, i)}$c${underlying.substring(i+1)}"
+    }
   }
 }

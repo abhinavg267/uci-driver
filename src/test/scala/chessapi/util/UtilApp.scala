@@ -6,5 +6,5 @@ import chessapi.model.{Piece, Position}
 
 
 object UtilApp extends App {
-  ShiftingMath.getPossibleShift(Position.fromString("d4"), Piece(White, Queen)).foreach(println)
+  //PossibleMoves.getPossibleMovesForPosition(Position.fromString("d4"), Piece(White, Queen)).foreach(println)
 }
